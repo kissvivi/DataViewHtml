@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		
+		<link rel="import" href="index_head.html" id="page1"/>
+		<link rel="import" href="index_left.html" id="page2"/>
+		<link rel="import" href="index_right.html" id="page3"/>
+	</head>
+	<body>
+		
+		<script type="text/javascript">
+		
+			document.write(page1.import.body.innerHTML)	;
+			
+			</script>
+			<div class="down-main">
+				<script>
+			document.write(page2.import.body.innerHTML)	;
+			document.write(page3.import.body.innerHTML)	;
+		</script>
+			</div>
+		
+			<script type="text/javascript">
+	
+		</script>
+		
+	</body>
+</html>

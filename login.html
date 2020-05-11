@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>扁平化响应式登录界面设计</title>
+
+
+		<!-- 新 Bootstrap4 核心 CSS 文件 -->
+		<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+
+		<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+		<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+		<!-- popper.min.js 用于弹窗、提示、下拉菜单 -->
+		<script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
+		<!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
+		<script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
+		<!-- 移动设备优先 -->
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+
+
+
+		<style type="text/css">
+			body {
+				background-image: url('./image/iot_bbb.jpg');
+				background-repeat: no-repeat;
+				background-size: 100%;
+			}
+
+			.middle {
+				margin-top: 110px;
+				margin-bottom: 110px;
+				padding: 100px 50px 50px 50px;
+				background-color: white;
+				border-radius: 15px;
+				box-shadow: 10px 10px 5px rgb(0, 0, 0, 0.1);
+
+			}
+
+			.login {
+				margin-left: 20px;
+			}
+
+			.font2 {
+				font-size: 0.6em;
+			}
+
+			.btn {
+				border-radius: 28px;
+			}
+		</style>
+
+		<script type="text/javascript">
+
+		</script>
+	</head>
+	<body>
+		<div class="container">
+			<div class="middle mx-auto h-75 w-75">
+				<div class="row">
+					<div class="col col-12 col-md-6">
+						<img class="rounded img-fluid" src="./image/iotLogin1.jpg" alt="web开发">
+					</div>
+					<div class="col col-12 col-md-6">
+						<div class="login">
+							<h5 class="font-weight-bold">物联网数据实时分析系统登录</h5>
+							<p class="font-weight-light font2">一个IOT数据分析管理平台</p>
+
+							<form>
+								<div class="form-group">
+
+									<label for="text" class="sr-only">Email address:</label>
+									<input type="text" class="form-control" id="userName" placeholder="请输入用户名">
+									<a href="#" class="tool" id="userNameMsg" data-toggle="tooltip" data-placement="left" title="用户名不允许为空!"></a>
+									<!-- <div id="userNameMsg"></div> -->
+								</div>
+
+								<div class="form-group">
+									<label for="pwd" class="sr-only">Password:</label>
+									<input type="password" class="form-control" id="pwd" placeholder="请输入密码">
+									<a href="#" class="tool" id="pwdMsg" data-toggle="tooltip" data-placement="left" title="密码不允许为空!"></a>
+									<!-- <div id="pwdMsg"></div> -->
+								</div>
+
+								<div class="xuan custom-control custom-checkbox">
+									<input type="checkbox" class="custom-control-input" id="customCheck" name="example1">
+									<label class="custom-control-label font-weight-light small" for="customCheck">记住用户名</label>
+								</div>
+
+								<br>
+								<button type="button" id="loginBtn" class="btn btn-primary btn-block w-75 mx-auto">登 录</button>
+							</form>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="config/config.js"></script>
+		<script src="js/layer-v3.1.1/layer/layer.js"></script>
+
+		<script>
+			function showPopover(target, msg) {
+				target.attr("data-original-title", msg);
+				$('[data-toggle="tooltip"]').tooltip();
+				target.tooltip('show');
+				target.focus();
+				//2秒后消失提示框
+				var id = setTimeout(
+					function() {
+						target.attr("data-original-title", "");
+						target.tooltip('hide');
+					}, 2000
+				);
+			}
+		</script>
+
+		<script>
+			$("#loginBtn").click(
+
+				<!-- 登录 -->
+				function() {
+
+					var userName = $("#userName").val();
+					var passWord = $("#pwd").val();
+
+					/* var userNameMsg = $("#userNameMsg");
+					var pwdMsg = $("#pwdMsg"); */
+
+					console.log("用户名：" + userName);
+
+					if (userName == "" || userName == 'undefined') {
+						//document.getElementById("userNameMsg").innerHTML = "用户名不允许为空";
+
+						//$("#userNameMsg").tooltip("show");
+						showPopover($("#userNameMsg"), "用户名不允许为空!");
+
+
+						console.log("用户名为空");
+					} else
+					if (passWord == "" || passWord == 'undefined') {
+						//document.getElementById("pwdMsg").innerHTML = "密码不允许为空";
+						showPopover($("#pwdMsg"), "密码不允许为空!");
+						//$("#pwdMsg").tooltip("show");
+
+						console.log("密码为空");
+					} else {
+
+						$.ajax({
+							url: "http://127.0.0.1/consumer/user/userLogin",
+
+							data: {
+								"userName": userName,
+								"passWord": passWord
+							},
+							datatype: 'json',
+							type: "GET",
+
+							success: function(result) {
+
+								if (result.code == 99) {
+
+									console.log(result.msg);
+
+									layer.alert(result.msg, {
+										icon: 6
+									});
+									setTimeout(function() {
+
+										window.location.reload();
+									}, 3000);
+
+								}
+								if (result.code == 200) {
+
+									console.log(result.msg);
+									layer.alert(result.msg, {
+										icon: 6
+									});
+
+									window.location.href = 'adminView/index_main.html';
+								}
+								console.log(result.msg);
+
+							},
+							error: function() {
+
+							}
+						});
+					}
+				}
+			)
+		</script>
+
+	</body>
+</html>
